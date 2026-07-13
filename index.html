@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Veux-tu être ma date ? 💖</title>
+
+<!-- Police Google Fonts : Quicksand -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ---------- RESET & BASE ---------- */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Quicksand', sans-serif;
+    /* Dégradé rose pastel doux pour le fond */
+    background: linear-gradient(135deg, #ffe6f2 0%, #ffd1e8 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden; /* pour que le bouton "Non" ne crée pas de scroll intempestif */
+  }
+
+  /* ---------- CARTE CENTRALE ---------- */
+  .card {
+    background: #ffffff;
+    border-radius: 30px;
+    padding: 40px 35px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 20px 45px rgba(255, 105, 180, 0.25);
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s ease;
+  }
+
+  /* ---------- IMAGE / GIF ---------- */
+  .photo-wrapper {
+    width: 160px;
+    height: 160px;
+    margin: 0 auto 20px auto;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 5px solid #ffb6d9;
+    box-shadow: 0 8px 20px rgba(255, 105, 180, 0.3);
+  }
+
+  .photo-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  /* ---------- TITRE ---------- */
+  h1 {
+    color: #d6336c;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 25px;
+    line-height: 1.4;
+  }
+
+  /* ---------- ZONE DES BOUTONS ---------- */
+  .buttons-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    position: relative;
+    min-height: 60px; /* garde de la place pour le bouton "Non" fuyant */
+  }
+
+  button {
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    border-radius: 50px;
+    padding: 14px 28px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  /* Bouton OUI : rose vif, statique */
+  #btn-oui {
+    background-color: #ff4d94;
+    color: #ffffff;
+    box-shadow: 0 8px 18px rgba(255, 77, 148, 0.4);
+  }
+
+  #btn-oui:hover {
+    transform: scale(1.08);
+    box-shadow: 0 10px 22px rgba(255, 77, 148, 0.55);
+  }
+
+  /* Bouton NON : discret, blanc/gris clair */
+  #btn-non {
+    background-color: #f1f1f1;
+    color: #888888;
+    /* position "fixed" pour pouvoir le déplacer librement sur tout l'écran */
+    position: fixed;
+    z-index: 10;
+  }
+
+  /* ---------- ÉCRAN 2 : DÉTAILS DU RENDEZ-VOUS ---------- */
+  /* Caché par défaut, prend la place de la carte 1 avec une transition */
+  .details-screen {
+    display: none;
+    text-align: center;
+  }
+
+  .details-screen.show {
+    display: block;
+    animation: fadeInUp 0.6s ease;
+  }
+
+  .details-titre {
+    color: #d6336c;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .details-soustitre {
+    color: #b3567a;
+    font-size: 1rem;
+    margin-bottom: 25px;
+  }
+
+  /* Liste des infos (date, lieu, plat, tenue) */
+  .details-liste {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+
+  .detail-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #fff5fa;
+    border-radius: 16px;
+    padding: 14px 16px;
+    box-shadow: 0 4px 12px rgba(255, 105, 180, 0.12);
+  }
+
+  .detail-icone {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .detail-texte {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .detail-label {
+    font-size: 0.75rem;
+    color: #b3567a;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+  }
+
+  .detail-valeur {
+    font-size: 1rem;
+    color: #5a3040;
+    font-weight: 600;
+  }
+
+  @keyframes fadeInUp {
+    0%   { transform: translateY(20px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+
+  /* Petit responsive pour mobile */
+  @media (max-width: 480px) {
+    h1 { font-size: 1.35rem; }
+    button { padding: 12px 20px; font-size: 0.9rem; }
+    .details-titre { font-size: 1.3rem; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="card" id="card">
+
+    <!-- 
+      ==================================================================
+      METTEZ ICI LA PHOTO / GIF DE LA PERSONNE À INVITER 💌
+      Remplacez la valeur de "src" par le lien ou le chemin de votre image
+      Exemple : src="photo-de-toi.jpg"  ou  src="https://exemple.com/mon-gif.gif"
+      ==================================================================
+    -->
+    <div class="photo-wrapper">
+     <img id="photo-invitation" src="image.PNG" alt="Photo de la personne invitée">
+    </div>
+
+    <!-- ========== ÉCRAN 1 : LA QUESTION ========== -->
+    <div id="ecran-question">
+      <h1 id="titre">Veux-tu être ma date ? 💖</h1>
+
+      <div class="buttons-container" id="buttons-container">
+        <button id="btn-oui">Ouiiii ! 💍</button>
+        <button id="btn-non">Non.</button>
+      </div>
+    </div>
+
+    <!-- ========== ÉCRAN 2 : DÉTAILS DU RENDEZ-VOUS ========== -->
+    <!-- Modifiez les valeurs ci-dessous (date, lieu, plat, tenue) selon votre organisation -->
+    <div class="details-screen" id="ecran-details">
+      <p class="details-titre">Trop bien ! 🥰🎉</p>
+      <p class="details-soustitre">Voici les détails de notre rendez-vous :</p>
+
+      <div class="details-liste">
+        <div class="detail-item">
+          <span class="detail-icone">📅</span>
+          <div class="detail-texte">
+            <span class="detail-label">Date & heure</span>
+            <!-- MODIFIEZ ICI la date et l'heure -->
+            <span class="detail-valeur" id="detail-date">Samedi 20 juillet à 19h30</span>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-icone">📍</span>
+          <div class="detail-texte">
+            <span class="detail-label">Lieu</span>
+            <!-- MODIFIEZ ICI le lieu / l'adresse -->
+            <span class="detail-valeur" id="detail-lieu">Terrasse du Ciel, Centre-ville</span>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-icone">🍽️</span>
+          <div class="detail-texte">
+            <span class="detail-label">Au menu</span>
+            <!-- MODIFIEZ ICI le restaurant / plat -->
+            <span class="detail-valeur" id="detail-plat">Dîner italien & tiramisu maison</span>
+          </div>
+        </div>
+
+        <div class="detail-item">
+          <span class="detail-icone">👗</span>
+          <div class="detail-texte">
+            <span class="detail-label">Tenue</span>
+            <!-- MODIFIEZ ICI la tenue suggérée / le thème -->
+            <span class="detail-valeur" id="detail-tenue">Chic décontracté</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  // ============================================================
+  //  LOGIQUE INTERACTIVE
+  // ============================================================
+
+  const btnNon = document.getElementById('btn-non');
+  const btnOui = document.getElementById('btn-oui');
+  const card = document.getElementById('card');
+  const ecranQuestion = document.getElementById('ecran-question');
+  const ecranDetails = document.getElementById('ecran-details');
+
+  // --- Fonction qui déplace le bouton "Non" à une position aléatoire ---
+  function fuirBoutonNon() {
+    // Dimensions de la fenêtre visible
+    const largeurFenetre = window.innerWidth;
+    const hauteurFenetre = window.innerHeight;
+
+    // Dimensions du bouton (pour ne pas qu'il sorte de l'écran)
+    const largeurBouton = btnNon.offsetWidth;
+    const hauteurBouton = btnNon.offsetHeight;
+
+    // Marge de sécurité pour rester bien visible dans la fenêtre
+    const marge = 20;
+
+    // Calcul d'une position aléatoire (en pixels) dans les limites de l'écran
+    const nouveauLeft = Math.random() * (largeurFenetre - largeurBouton - marge * 2) + marge;
+    const nouveauTop = Math.random() * (hauteurFenetre - hauteurBouton - marge * 2) + marge;
+
+    // Application de la nouvelle position
+    btnNon.style.left = `${nouveauLeft}px`;
+    btnNon.style.top = `${nouveauTop}px`;
+  }
+
+  // --- Dès que la souris s'approche du bouton "Non", il s'enfuit ---
+  btnNon.addEventListener('mouseover', fuirBoutonNon);
+
+  // --- Bonus : sur mobile (tactile), le "touchstart" fait aussi fuir le bouton ---
+  btnNon.addEventListener('touchstart', function (e) {
+    e.preventDefault(); // empêche le "clic fantôme" qui suit le touch
+    fuirBoutonNon();
+  });
+
+  // --- Action quand on clique sur le bouton "Oui" ---
+  btnOui.addEventListener('click', function () {
+    // On cache l'écran de la question (avec une petite transition de sortie)
+    ecranQuestion.style.transition = 'opacity 0.3s ease';
+    ecranQuestion.style.opacity = '0';
+
+    setTimeout(function () {
+      ecranQuestion.style.display = 'none';
+
+      // On affiche l'écran des détails avec l'animation "fadeInUp" (définie en CSS)
+      ecranDetails.classList.add('show');
+    }, 300); // correspond à la durée de la transition ci-dessus
+  });
+
+  // --- Petit easter egg : si la fenêtre est redimensionnée pendant que 
+  //     le bouton "Non" est déjà déplacé, on s'assure qu'il reste visible ---
+  window.addEventListener('resize', function () {
+    if (btnNon.style.left) {
+      fuirBoutonNon();
+    }
+  });
+</script>
+
+</body>
+</html>
