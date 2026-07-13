@@ -113,7 +113,7 @@
     z-index: 10;
   }
 
-  /* ---------- ÉCRAN 2 : DÉTAILS DU RENDEZ-VOUS ---------- */
+  /* ---------- ÉCRAN 2 : CHOIX DU RENDEZ-VOUS ---------- */
   /* Caché par défaut, prend la place de la carte 1 avec une transition */
   .details-screen {
     display: none;
@@ -134,51 +134,120 @@
 
   .details-soustitre {
     color: #b3567a;
-    font-size: 1rem;
-    margin-bottom: 25px;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
   }
 
-  /* Liste des infos (date, lieu, plat, tenue) */
-  .details-liste {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    text-align: left;
-    margin-bottom: 10px;
-  }
-
-  .detail-item {
+  /* Bloc lieu fixe (non modifiable, juste informatif) */
+  .lieu-fixe {
     display: flex;
     align-items: center;
-    gap: 14px;
+    justify-content: center;
+    gap: 10px;
     background: #fff5fa;
     border-radius: 16px;
-    padding: 14px 16px;
+    padding: 12px 16px;
+    margin-bottom: 22px;
     box-shadow: 0 4px 12px rgba(255, 105, 180, 0.12);
+    font-weight: 600;
+    color: #5a3040;
   }
 
-  .detail-icone {
-    font-size: 1.4rem;
-    flex-shrink: 0;
+  /* Chaque groupe de choix (date, resto, tenue) */
+  .choix-groupe {
+    text-align: left;
+    margin-bottom: 22px;
   }
 
-  .detail-texte {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .detail-label {
-    font-size: 0.75rem;
+  .choix-label {
+    display: block;
+    font-size: 0.8rem;
     color: #b3567a;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  .choix-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* Une option cliquable */
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: #fff5fa;
+    border: 2px solid transparent;
+    border-radius: 14px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+    color: #5a3040;
     font-weight: 600;
   }
 
-  .detail-valeur {
-    font-size: 1rem;
-    color: #5a3040;
-    font-weight: 600;
+  .option:hover {
+    background: #ffe6f2;
+  }
+
+  /* État sélectionné : bordure et fond rose vif */
+  .option.selected {
+    border-color: #ff4d94;
+    background: #ffe0ef;
+  }
+
+  .option-icone {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+
+  /* Bouton de confirmation finale */
+  #btn-confirmer {
+    background-color: #ff4d94;
+    color: #ffffff;
+    box-shadow: 0 8px 18px rgba(255, 77, 148, 0.4);
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  #btn-confirmer:hover {
+    transform: scale(1.03);
+  }
+
+  #btn-confirmer:disabled {
+    background-color: #f1c6dc;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .choix-note {
+    font-size: 0.8rem;
+    color: #c98aa8;
+    margin-top: -10px;
+    margin-bottom: 20px;
+  }
+
+  /* ---------- ÉCRAN 3 : CONFIRMATION FINALE ---------- */
+  .confirmation-screen {
+    display: none;
+    text-align: center;
+  }
+
+  .confirmation-screen.show {
+    display: block;
+    animation: fadeInUp 0.6s ease;
+  }
+
+  .confirmation-titre {
+    color: #d6336c;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 20px;
   }
 
   @keyframes fadeInUp {
@@ -186,11 +255,78 @@
     100% { transform: translateY(0); opacity: 1; }
   }
 
+  /* ---------- CONFETTIS & FEU D'ARTIFICE ---------- */
+  /* Conteneur plein écran pour l'animation festive, au-dessus de tout */
+  #confetti-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none; /* pour ne pas bloquer les clics */
+    overflow: hidden;
+    z-index: 999;
+  }
+
+  /* Un morceau de confetti (petit carré coloré qui tombe en tournoyant) */
+  .confetti-piece {
+    position: absolute;
+    top: -20px;
+    width: 10px;
+    height: 10px;
+    opacity: 0.9;
+    animation: tomber linear forwards;
+  }
+
+  @keyframes tomber {
+    0% {
+      transform: translateY(0) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(110vh) rotate(720deg);
+      opacity: 0.8;
+    }
+  }
+
+  /* Une étincelle de feu d'artifice (petit point qui explose en rond) */
+  .firework-spark {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    animation: exploser 1s ease-out forwards;
+  }
+
+  @keyframes exploser {
+    0% {
+      transform: translate(0, 0) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(var(--dx), var(--dy)) scale(0.3);
+      opacity: 0;
+    }
+  }
+
+  /* Emoji de fête qui apparaît et disparaît doucement au centre */
+  .emoji-fete {
+    position: absolute;
+    font-size: 2rem;
+    animation: popEmoji 1.2s ease-out forwards;
+  }
+
+  @keyframes popEmoji {
+    0%   { transform: scale(0) translateY(0); opacity: 0; }
+    30%  { transform: scale(1.3) translateY(-10px); opacity: 1; }
+    100% { transform: scale(1) translateY(-60px); opacity: 0; }
+  }
+
   /* Petit responsive pour mobile */
   @media (max-width: 480px) {
     h1 { font-size: 1.35rem; }
     button { padding: 12px 20px; font-size: 0.9rem; }
-    .details-titre { font-size: 1.3rem; }
+    .details-titre, .confirmation-titre { font-size: 1.3rem; }
   }
 </style>
 </head>
@@ -206,7 +342,7 @@
       ==================================================================
     -->
     <div class="photo-wrapper">
-     <img id="photo-invitation" src="image.PNG" alt="Photo de la personne invitée">
+       <img id="photo-invitation" src="image.PNG" alt="Photo de la personne invitée">
     </div>
 
     <!-- ========== ÉCRAN 1 : LA QUESTION ========== -->
@@ -219,52 +355,100 @@
       </div>
     </div>
 
-    <!-- ========== ÉCRAN 2 : DÉTAILS DU RENDEZ-VOUS ========== -->
-    <!-- Modifiez les valeurs ci-dessous (date, lieu, plat, tenue) selon votre organisation -->
+    <!-- ========== ÉCRAN 2 : ELLE CHOISIT LES DÉTAILS ========== -->
     <div class="details-screen" id="ecran-details">
       <p class="details-titre">Trop bien ! 🥰🎉</p>
-      <p class="details-soustitre">Voici les détails de notre rendez-vous :</p>
+      <p class="details-soustitre">À toi de choisir ce qui te ferait plaisir :</p>
 
-      <div class="details-liste">
-        <div class="detail-item">
-          <span class="detail-icone">📅</span>
-          <div class="detail-texte">
-            <span class="detail-label">Date & heure</span>
-            <!-- MODIFIEZ ICI la date et l'heure -->
-            <span class="detail-valeur" id="detail-date">Samedi 20 juillet à 19h30</span>
+      <!-- Lieu fixe : Casablanca (non modifiable) -->
+      <div class="lieu-fixe">
+        <span>📍</span>
+        <span>Casablanca, Maroc</span>
+      </div>
+
+      <!-- Choix 1 : la date -->
+      <div class="choix-groupe">
+        <span class="choix-label">📅 Quand ça t'arrange ?</span>
+        <div class="choix-options" data-groupe="date">
+          <!-- MODIFIEZ ICI les options de date proposées -->
+          <div class="option" data-valeur="Vendredi soir">
+            <span class="option-icone">🌙</span> Vendredi soir
+          </div>
+          <div class="option" data-valeur="Samedi après-midi">
+            <span class="option-icone">☀️</span> Samedi après-midi
+          </div>
+          <div class="option" data-valeur="Dimanche soir">
+            <span class="option-icone">🌆</span> Dimanche soir
           </div>
         </div>
+      </div>
 
-        <div class="detail-item">
-          <span class="detail-icone">📍</span>
-          <div class="detail-texte">
-            <span class="detail-label">Lieu</span>
-            <!-- MODIFIEZ ICI le lieu / l'adresse -->
-            <span class="detail-valeur" id="detail-lieu">Terrasse du Ciel, Centre-ville</span>
+      <!-- Choix 2 : le restaurant / type de sortie -->
+      <div class="choix-groupe">
+        <span class="choix-label">🍽️ On mange quoi ?</span>
+        <div class="choix-options" data-groupe="resto">
+          <!-- MODIFIEZ ICI les options de restaurant proposées -->
+          <div class="option" data-valeur="Italien">
+            <span class="option-icone">🍝</span> Italien
+          </div>
+          <div class="option" data-valeur="Sushi">
+            <span class="option-icone">🍣</span> Sushi
+          </div>
+          <div class="option" data-valeur="Café / Brunch">
+            <span class="option-icone">☕</span> Café / Brunch
           </div>
         </div>
+      </div>
 
-        <div class="detail-item">
-          <span class="detail-icone">🍽️</span>
-          <div class="detail-texte">
-            <span class="detail-label">Au menu</span>
-            <!-- MODIFIEZ ICI le restaurant / plat -->
-            <span class="detail-valeur" id="detail-plat">Dîner italien & tiramisu maison</span>
+      <!-- Choix 3 : la tenue -->
+      <div class="choix-groupe">
+        <span class="choix-label">👗 Quelle ambiance ?</span>
+        <div class="choix-options" data-groupe="tenue">
+          <!-- MODIFIEZ ICI les options de tenue/thème proposées -->
+          <div class="option" data-valeur="Décontracté">
+            <span class="option-icone">👟</span> Décontracté
+          </div>
+          <div class="option" data-valeur="Chic">
+            <span class="option-icone">👠</span> Chic
+          </div>
+          <div class="option" data-valeur="Comme tu veux">
+            <span class="option-icone">✨</span> Comme tu veux
           </div>
         </div>
+      </div>
 
-        <div class="detail-item">
-          <span class="detail-icone">👗</span>
-          <div class="detail-texte">
-            <span class="detail-label">Tenue</span>
-            <!-- MODIFIEZ ICI la tenue suggérée / le thème -->
-            <span class="detail-valeur" id="detail-tenue">Chic décontracté</span>
-          </div>
+      <p class="choix-note" id="choix-note">Sélectionne une option dans chaque catégorie ⬆️</p>
+
+      <button id="btn-confirmer" disabled>Confirmer mes choix 💖</button>
+    </div>
+
+    <!-- ========== ÉCRAN 3 : CONFIRMATION FINALE ========== -->
+    <div class="confirmation-screen" id="ecran-confirmation">
+      <p class="confirmation-titre">C'est noté ! 🎉💌</p>
+      <div class="details-liste" style="display:flex; flex-direction:column; gap:14px; text-align:left;">
+        <div class="detail-item" style="display:flex; align-items:center; gap:14px; background:#fff5fa; border-radius:16px; padding:14px 16px;">
+          <span class="detail-icone" style="font-size:1.4rem;">📍</span>
+          <span>Casablanca, Maroc</span>
+        </div>
+        <div class="detail-item" style="display:flex; align-items:center; gap:14px; background:#fff5fa; border-radius:16px; padding:14px 16px;">
+          <span class="detail-icone" style="font-size:1.4rem;">📅</span>
+          <span id="recap-date"></span>
+        </div>
+        <div class="detail-item" style="display:flex; align-items:center; gap:14px; background:#fff5fa; border-radius:16px; padding:14px 16px;">
+          <span class="detail-icone" style="font-size:1.4rem;">🍽️</span>
+          <span id="recap-resto"></span>
+        </div>
+        <div class="detail-item" style="display:flex; align-items:center; gap:14px; background:#fff5fa; border-radius:16px; padding:14px 16px;">
+          <span class="detail-icone" style="font-size:1.4rem;">👗</span>
+          <span id="recap-tenue"></span>
         </div>
       </div>
     </div>
 
   </div>
+
+  <!-- Conteneur invisible qui accueillera les confettis et étincelles générés en JS -->
+  <div id="confetti-container"></div>
 
 <script>
   // ============================================================
@@ -276,6 +460,16 @@
   const card = document.getElementById('card');
   const ecranQuestion = document.getElementById('ecran-question');
   const ecranDetails = document.getElementById('ecran-details');
+  const ecranConfirmation = document.getElementById('ecran-confirmation');
+  const btnConfirmer = document.getElementById('btn-confirmer');
+  const choixNote = document.getElementById('choix-note');
+
+  // Stocke la sélection de chaque groupe (date, resto, tenue)
+  const selections = {
+    date: null,
+    resto: null,
+    tenue: null
+  };
 
   // --- Fonction qui déplace le bouton "Non" à une position aléatoire ---
   function fuirBoutonNon() {
@@ -329,6 +523,170 @@
       fuirBoutonNon();
     }
   });
+
+  // ============================================================
+  //  GESTION DES CHOIX (date / resto / tenue)
+  // ============================================================
+
+  // On récupère tous les groupes de choix (date, resto, tenue)
+  const groupes = document.querySelectorAll('.choix-options');
+
+  groupes.forEach(function (groupe) {
+    const nomGroupe = groupe.dataset.groupe; // "date", "resto" ou "tenue"
+    const options = groupe.querySelectorAll('.option');
+
+    options.forEach(function (option) {
+      option.addEventListener('click', function () {
+        // On retire la sélection des autres options du même groupe
+        options.forEach(function (o) { o.classList.remove('selected'); });
+
+        // On sélectionne celle cliquée
+        option.classList.add('selected');
+        selections[nomGroupe] = option.dataset.valeur;
+
+        // On vérifie si les 3 groupes ont une sélection pour activer le bouton
+        verifierSelections();
+      });
+    });
+  });
+
+  // Active le bouton "Confirmer" seulement si les 3 choix sont faits
+  function verifierSelections() {
+    const toutEstChoisi = selections.date && selections.resto && selections.tenue;
+    btnConfirmer.disabled = !toutEstChoisi;
+    choixNote.style.display = toutEstChoisi ? 'none' : 'block';
+  }
+
+  // --- Clic sur "Confirmer mes choix" ---
+  btnConfirmer.addEventListener('click', function () {
+    if (btnConfirmer.disabled) return;
+
+    // On remplit le récapitulatif avec les choix sélectionnés
+    document.getElementById('recap-date').textContent = selections.date;
+    document.getElementById('recap-resto').textContent = selections.resto;
+    document.getElementById('recap-tenue').textContent = selections.tenue;
+
+    // Transition vers l'écran de confirmation
+    ecranDetails.style.transition = 'opacity 0.3s ease';
+    ecranDetails.style.opacity = '0';
+
+    setTimeout(function () {
+      ecranDetails.style.display = 'none';
+      ecranConfirmation.classList.add('show');
+
+      // 🎉 On lance la petite fête : confettis + feu d'artifice + emojis
+      lancerLaFete();
+    }, 300);
+  });
+
+  // ============================================================
+  //  ANIMATION FESTIVE : confettis + feu d'artifice + emojis
+  // ============================================================
+
+  const confettiContainer = document.getElementById('confetti-container');
+  const couleursConfettis = ['#ff4d94', '#ff8fc2', '#ffd1e8', '#ffe6f2', '#d6336c', '#ffffff'];
+
+  // --- Génère une pluie de confettis qui tombent du haut de l'écran ---
+  function genererConfettis(nombre) {
+    for (let i = 0; i < nombre; i++) {
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti-piece';
+
+      // Position horizontale aléatoire sur toute la largeur de l'écran
+      confetti.style.left = Math.random() * 100 + 'vw';
+
+      // Couleur et forme aléatoires (carré ou rond)
+      confetti.style.backgroundColor = couleursConfettis[Math.floor(Math.random() * couleursConfettis.length)];
+      confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+
+      // Durée et délai de chute aléatoires pour un effet naturel
+      const duree = 2.5 + Math.random() * 2; // entre 2.5s et 4.5s
+      const delai = Math.random() * 1.5;
+      confetti.style.animationDuration = duree + 's';
+      confetti.style.animationDelay = delai + 's';
+
+      confettiContainer.appendChild(confetti);
+
+      // On nettoie le confetti du DOM une fois l'animation terminée
+      setTimeout(function () {
+        confetti.remove();
+      }, (duree + delai) * 1000);
+    }
+  }
+
+  // --- Génère une explosion de feu d'artifice à une position donnée ---
+  function genererFeuArtifice(x, y) {
+    const nombreEtincelles = 24;
+    const couleurs = ['#ff4d94', '#ffd1e8', '#ff8fc2', '#ffffff', '#d6336c'];
+
+    for (let i = 0; i < nombreEtincelles; i++) {
+      const etincelle = document.createElement('div');
+      etincelle.className = 'firework-spark';
+
+      // Chaque étincelle part dans une direction différente (cercle complet)
+      const angle = (Math.PI * 2 * i) / nombreEtincelles;
+      const distance = 60 + Math.random() * 40;
+      const dx = Math.cos(angle) * distance + 'px';
+      const dy = Math.sin(angle) * distance + 'px';
+
+      etincelle.style.setProperty('--dx', dx);
+      etincelle.style.setProperty('--dy', dy);
+      etincelle.style.left = x + 'px';
+      etincelle.style.top = y + 'px';
+      etincelle.style.backgroundColor = couleurs[Math.floor(Math.random() * couleurs.length)];
+
+      confettiContainer.appendChild(etincelle);
+
+      setTimeout(function () {
+        etincelle.remove();
+      }, 1000);
+    }
+  }
+
+  // --- Fait apparaître quelques emojis de fête qui flottent puis disparaissent ---
+  function genererEmojisFete() {
+    const emojis = ['🎉', '💖', '✨', '🎊', '💍'];
+
+    emojis.forEach(function (emoji, index) {
+      setTimeout(function () {
+        const span = document.createElement('span');
+        span.className = 'emoji-fete';
+        span.textContent = emoji;
+
+        span.style.left = (20 + Math.random() * 60) + 'vw';
+        span.style.top = (30 + Math.random() * 30) + 'vh';
+
+        confettiContainer.appendChild(span);
+
+        setTimeout(function () {
+          span.remove();
+        }, 1200);
+      }, index * 150); // léger décalage entre chaque emoji
+    });
+  }
+
+  // --- Fonction principale qui déclenche toute la petite fête ---
+  function lancerLaFete() {
+    // Pluie de confettis sur tout l'écran
+    genererConfettis(80);
+
+    // Quelques feux d'artifice à des positions aléatoires, décalés dans le temps
+    for (let i = 0; i < 3; i++) {
+      setTimeout(function () {
+        const x = window.innerWidth * (0.2 + Math.random() * 0.6);
+        const y = window.innerHeight * (0.2 + Math.random() * 0.3);
+        genererFeuArtifice(x, y);
+      }, i * 400);
+    }
+
+    // Les emojis flottants
+    genererEmojisFete();
+
+    // Une deuxième vague de confettis un peu plus tard pour prolonger la fête
+    setTimeout(function () {
+      genererConfettis(50);
+    }, 800);
+  }
 </script>
 
 </body>
