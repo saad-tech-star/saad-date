@@ -27,7 +27,9 @@
     justify-content: center;
     align-items: center;
     position: relative;
-    overflow: hidden; /* pour que le bouton "Non" ne crée pas de scroll intempestif */
+    overflow-x: hidden; /* empêche le scroll horizontal créé par le bouton "Non" */
+    overflow-y: auto;   /* autorise le scroll vertical normal (important sur mobile) */
+    padding: 20px 0;    /* petit espace en haut/bas pour ne pas coller aux bords en scrollant */
   }
 
   /* ---------- CARTE CENTRALE ---------- */
@@ -342,7 +344,7 @@
       ==================================================================
     -->
     <div class="photo-wrapper">
-       <img id="photo-invitation" src="image.PNG" alt="Photo de la personne invitée">
+      <img id="photo-invitation" src="image.PNG" alt="Photo de la personne invitée">
     </div>
 
     <!-- ========== ÉCRAN 1 : LA QUESTION ========== -->
